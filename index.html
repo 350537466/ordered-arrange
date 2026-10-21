@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8"><title>有序排列</title>
+<style>
+body{font-family:"Microsoft YaHei",sans-serif;background:#f4f8ff;margin:0;display:flex;flex-direction:column;align-items:center}
+h1{color:#1f4fbf;font-size:44px;margin:20px 0 4px}
+.rule{font-size:24px;color:#444;margin-bottom:6px;text-align:center}
+.lab{font-size:22px;color:#555;margin:14px 0 6px}
+#q{display:flex;gap:8px;font-size:34px;font-weight:bold;color:#1f4fbf;min-height:48px}
+table{border-collapse:collapse;margin-top:10px}
+td{width:82px;height:76px;border:3px solid #1f4fbf;text-align:center;font-size:40px;font-weight:bold;color:#1f4fbf;background:#fff}
+td.rl{border:none;background:none;font-size:26px;color:#555;width:110px}
+td.bad{background:#ffd6d6;color:#d62828}
+.btns{margin:26px 0 12px;display:flex;gap:30px}
+button{font-size:32px;padding:16px 40px;border:none;border-radius:14px;color:#fff;cursor:pointer}
+#r1{background:#1f8f4e}#r2{background:#1f4fbf}#rbtn{background:#888;font-size:24px}
+button:disabled{opacity:.35;cursor:not-allowed}
+#msg{font-size:28px;font-weight:bold;height:40px;color:#444}#msg.bad{color:#d62828}#msg.ok{color:#1f8f4e}
+footer{position:fixed;bottom:8px;right:16px;font-size:16px;color:#999}
+</style></head><body>
+<h1>有序排列</h1>
+<div class="rule">12 人身高各不相同（1 最矮，12 最高），排成 2 行，每行从左到右由矮到高；<br>并排的两人中，后面（第②行）的人要比前面（第①行）的人高</div>
+<div class="lab">按 1～12 的顺序等待入队</div><div id="q"></div>
+<table id="g"></table>
+<div class="btns"><button id="r1">排到第①行</button><button id="r2">排到第②行</button><button id="rbtn">重来</button></div>
+<div id="msg"></div>
+<footer>李子老师AI生成</footer>
+<script>
+const N=6;let next,rows,bad;
+function reset(){next=1;rows=[[],[]];bad=-1;draw('','')}
+function draw(m,c){
+ q.innerHTML='';for(let i=next;i<=2*N;i++)q.innerHTML+=`<span>${i}</span>`;
+ let h='';['第①行（前）','第②行（后）'].forEach((t,r)=>{h+=`<tr><td class="rl">${t}</td>`;for(let j=0;j<N;j++)h+=`<td class="${r==1&&j==bad?'bad':''}">${rows[r][j]||''}</td>`;h+='</tr>'});g.innerHTML=h;
+ r1.disabled=bad>=0||rows[0].length>=N;r2.disabled=bad>=0||rows[1].length>=N;
+ if(bad<0&&next>2*N){m='排好了！每列都是后面的人比前面高';c='ok'}
+ msg.textContent=m;msg.className=c;
+}
+r1.onclick=()=>{const k=next++;rows[0].push(k);draw(k+' 号排到第①行最左边的空位','')};
+r2.onclick=()=>{const j=rows[1].length,k=next++;rows[1].push(k);
+ if(j>=rows[0].length){bad=j;draw('违规！'+k+' 号前面还没有人，之后来的人都比他高，会站到他前面','bad')}
+ else draw(k+' 号排到第②行，比前面的 '+rows[0][j]+' 号高','')};
+rbtn.onclick=reset;reset();
+</script></body></html>
